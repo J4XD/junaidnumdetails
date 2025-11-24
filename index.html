@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Junaid OSINT</title>
+  <!-- 🔹 IBM Plex Mono (Modern Hacker Font) -->
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.8px;
+    }
+    body {
+      background: #0a0a0f;
+      color: #0f9d58;
+      padding: 20px;
+      line-height: 1.7;
+      background-image: 
+        linear-gradient(45deg, rgba(0,0,0,0.08) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(0,0,0,0.08) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.08) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.08) 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #0c0c14;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 128, 0.3);
+      border: 1px solid #0f9d58;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #0f9d58;
+      font-size: 28px;
+      text-shadow: 0 0 5px #0f9d58;
+      letter-spacing: 2px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .hacker-icon {
+      font-size: 32px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .btn-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #0f9d58;
+      color: #000;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-shadow: 0 0 3px #fff;
+      box-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+      font-size: 16px;
+    }
+    .btn:hover {
+      background: #00ff80;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 255, 128, 0.8);
+    }
+    .search-box {
+      display: none;
+      margin-top: 20px;
+    }
+    .search-box.active {
+      display: block;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #0f9d58;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      background: #0c0c14;
+      color: #0f9d58;
+      caret-color: #0f9d58;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 255, 128, 0.3);
+      font-weight: 500;
+    }
+    input:focus {
+      box-shadow: 0 0 10px rgba(0, 255, 128, 0.6);
+    }
+    button#submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: #0f9d58;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-shadow: 0 0 3px #fff;
+      box-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+      font-weight: 600;
+    }
+    button#submit-btn:hover {
+      background: #00ff80;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 255, 128, 0.8);
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #0c0c14;
+      border-radius: 8px;
+      border: 1px solid #0f9d58;
+      display: none;
+    }
+    #result h3 {
+      margin-bottom: 10px;
+      color: #0f9d58;
+      text-shadow: 0 0 5px #0f9d58;
+      font-weight: 600;
+    }
+    .data-line {
+      margin: 8px 0;
+      padding: 10px;
+      background: #0e0e16;
+      border-radius: 6px;
+      border-left: 4px solid #0f9d58;
+      font-size: 15px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      box-shadow: 0 0 5px rgba(0, 255, 128, 0.2);
+      font-weight: 500;
+    }
+    .data-line strong {
+      color: #0f9d58;
+      font-weight: 600;
+    }
+    .note {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #ff5722;
+      text-align: center;
+      text-shadow: 0 0 3px #ff5722;
+      font-weight: 500;
+    }
+    .terminal {
+      font-family: 'IBM Plex Mono', monospace;
+      background: #000;
+      color: #0f9d58;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #0f9d58;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 14px;
+      box-shadow: 0 0 10px rgba(0, 255, 128, 0.3);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- ✅ Updated Header: Hacker Icon + Clean Title -->
+    <h1><span class="hacker-icon">👨‍💻</span> JUNAID OSINT</h1>
+
+    <div class="btn-group">
+      <button class="btn" onclick="showSearch('mobile')">📱 Mobile Number Search</button>
+    </div>
+
+    <div id="mobile-search" class="search-box">
+      <input type="text" id="mobile-input" placeholder="Enter 10-digit mobile number" maxlength="10" />
+      <button id="submit-btn" onclick="fetchData('mobile')">🔍 SEARCH</button>
+    </div>
+
+    <div id="result"></div>
+
+    <p class="note">This tool was created by Junaid.fr5 for educational purposes only. Do not misuse.</p>
+  </div>
+
+  <script>
+    let activeType = null;
+
+    function showSearch(type) {
+      document.getElementById('mobile-search').classList.remove('active');
+      if (type === 'mobile') {
+        document.getElementById('mobile-search').classList.add('active');
+        activeType = 'mobile';
+      }
+    }
+
+    async function fetchData(type) {
+      let term = '';
+      if (type === 'mobile') {
+        term = document.getElementById('mobile-input').value.trim();
+        if (!/^\d{10}$/.test(term)) {
+          alert("Please enter a valid 10-digit mobile number.");
+          return;
+        }
+      }
+
+      const url = `http://aetherosint.site/cutieee/api.php?key=junaid&type=mobile&term=${term}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`API returned error: ${response.status}`);
+
+        const rawText = await response.text();
+
+        let data;
+        try {
+          data = JSON.parse(rawText);
+        } catch (e) {
+          data = parseRawResponse(rawText);
+        }
+
+        displayResults(data, type);
+
+      } catch (err) {
+        document.getElementById('result').innerHTML = `<h3>Error:</h3><pre class="terminal">${err.message}</pre>`;
+        document.getElementById('result').style.display = 'block';
+      }
+    }
+
+    function parseRawResponse(rawText) {
+      let cleanText = rawText.replace(/[\n\r\t]/g, ' ').replace(/\s+/g, ' ').trim();
+      let result = [];
+      const pattern = /"(\w+)"\s*:\s*"([^"]*)"/g;
+      let match;
+      let obj = {};
+
+      while ((match = pattern.exec(cleanText)) !== null) {
+        let key = match[1];
+        let value = match[2];
+        obj[key] = value;
+      }
+
+      if (Object.keys(obj).length > 0) {
+        result.push(obj);
+      }
+
+      if (result.length === 0) {
+        return { error: "Could not parse response", raw: rawText };
+      }
+
+      return result;
+    }
+
+    function displayResults(data, type) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = `<h3>🔍 Result for Mobile:</h3>`;
+      resultDiv.style.display = 'block';
+
+      if (data.error) {
+        resultDiv.innerHTML += `<div class="data-line"><strong>Error:</strong> ${data.error}</div>`;
+        return;
+      }
+
+      if (Array.isArray(data)) {
+        data.forEach((item, index) => {
+          let html = ``;
+          if (item.mobile) html += `<div class="data-line"><strong>Mobile Number:</strong> ${item.mobile}</div>`;
+          if (item.name) html += `<div class="data-line"><strong>Full Name:</strong> ${item.name}</div>`;
+          if (item.fname) html += `<div class="data-line"><strong>Father Name:</strong> ${item.fname}</div>`;
+          if (item.address) html += `<div class="data-line"><strong>Address:</strong> ${item.address}</div>`;
+          if (item.id) html += `<div class="data-line"><strong>Aadhaar No:</strong> ${item.id}</div>`;
+          if (item.alt) html += `<div class="data-line"><strong>Alternate No:</strong> ${item.alt}</div>`;
+          if (item.circle) html += `<div class="data-line"><strong>Circle:</strong> ${item.circle}</div>`;
+          if (html === '') {
+            html = `<div class="data-line"><strong>No data found for this record.</strong></div>`;
+          }
+          resultDiv.innerHTML += html;
+        });
+      } else if (typeof data === 'object') {
+        let html = ``;
+        if (data.mobile) html += `<div class="data-line"><strong>Mobile Number:</strong> ${data.mobile}</div>`;
+        if (data.name) html += `<div class="data-line"><strong>Full Name:</strong> ${data.name}</div>`;
+        if (data.fname) html += `<div class="data-line"><strong>Father Name:</strong> ${data.fname}</div>`;
+        if (data.address) html += `<div class="data-line"><strong>Address:</strong> ${data.address}</div>`;
+        if (data.id) html += `<div class="data-line"><strong>Aadhaar No:</strong> ${data.id}</div>`;
+        if (data.alt) html += `<div class="data-line"><strong>Alternate No:</strong> ${data.alt}</div>`;
+        if (data.circle) html += `<div class="data-line"><strong>Circle:</strong> ${data.circle}</div>`;
+        if (html === '') {
+          html = `<div class="data-line"><strong>No data found.</strong></div>`;
+        }
+        resultDiv.innerHTML += html;
+      } else {
+        resultDiv.innerHTML += `<div class="data-line"><strong>Raw Response:</strong><br><pre class="terminal">${rawText}</pre></div>`;
+      }
+    }
+  </script>
+</body>
+</html>
