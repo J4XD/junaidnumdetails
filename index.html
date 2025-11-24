@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Junaid OSINT</title>
-  <!-- 🔹 IBM Plex Mono (Modern Hacker Font) -->
+  <title>Junaid OSINT | Demo OSINT Tool</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     * {
@@ -178,6 +177,37 @@
       box-shadow: 0 0 10px rgba(0, 255, 128, 0.3);
       font-weight: 500;
     }
+
+    /* ✅ LOADING ANIMATION */
+    .loading {
+      text-align: center;
+      font-weight: 600;
+      font-size: 16px;
+      color: #0f9d58;
+      text-shadow: 0 0 5px #0f9d58;
+      padding: 15px;
+    }
+    .loading-dots::after {
+      content: '.';
+      animation: dots 1.5s infinite;
+    }
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
+    }
+
+    /* ✅ NOT FOUND MESSAGE */
+    .not-found {
+      text-align: center;
+      padding: 15px;
+      background: #0e0e16;
+      border-radius: 6px;
+      border-left: 4px solid #ff5722;
+      color: #ff5722;
+      font-weight: 600;
+      text-shadow: 0 0 3px #ff5722;
+    }
   </style>
 </head>
 <body>
@@ -219,15 +249,24 @@
         }
       }
 
-      // ✅ Use CORS Proxy to bypass browser restrictions
+      // ✅ Show loading animation
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = `<div class="loading">Searching<span class="loading-dots"></span></div>`;
+      resultDiv.style.display = 'block';
+
+      // ✅ Use CORS Proxy
       const apiUrl = `http://aetherosint.site/cutieee/api.php?key=junaid&type=mobile&term=${term}`;
       const corsProxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
 
       try {
         const response = await fetch(corsProxyUrl);
-        if (!response.ok) throw new Error(`API returned error: ${response.status}`);
+        
+        // ✅ Handle common HTTP errors as "Details Not Found"
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
 
-        const rawResponse = await response.json(); // AllOrigins returns data in "contents" key
+        const rawResponse = await response.json();
         const rawText = rawResponse.contents;
 
         let data;
@@ -240,8 +279,8 @@
         displayResults(data, type);
 
       } catch (err) {
-        document.getElementById('result').innerHTML = `<h3>Error:</h3><pre class="terminal">${err.message}</pre>`;
-        document.getElementById('result').style.display = 'block';
+        // ✅ Always show "Details Not Found" for any error
+        resultDiv.innerHTML = `<div class="not-found">Details Not Found</div>`;
       }
     }
 
@@ -272,7 +311,6 @@
     function displayResults(data, type) {
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = `<h3>🔍 Result for Mobile:</h3>`;
-      resultDiv.style.display = 'block';
 
       if (data.error) {
         resultDiv.innerHTML += `<div class="data-line"><strong>Error:</strong> ${data.error}</div>`;
