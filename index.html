@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Junaid OSINT</title>
+  <title>Junaid OSINT | Demo OSINT Tool</title>
   <!-- 🔹 IBM Plex Mono (Modern Hacker Font) -->
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -182,7 +182,6 @@
 </head>
 <body>
   <div class="container">
-    <!-- ✅ Updated Header: Hacker Icon + Clean Title -->
     <h1><span class="hacker-icon">👨‍💻</span> JUNAID OSINT</h1>
 
     <div class="btn-group">
@@ -220,13 +219,16 @@
         }
       }
 
-      const url = `http://aetherosint.site/cutieee/api.php?key=junaid&type=mobile&term=${term}`;
+      // ✅ Use CORS Proxy to bypass browser restrictions
+      const apiUrl = `http://aetherosint.site/cutieee/api.php?key=junaid&type=mobile&term=${term}`;
+      const corsProxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
 
       try {
-        const response = await fetch(url);
+        const response = await fetch(corsProxyUrl);
         if (!response.ok) throw new Error(`API returned error: ${response.status}`);
 
-        const rawText = await response.text();
+        const rawResponse = await response.json(); // AllOrigins returns data in "contents" key
+        const rawText = rawResponse.contents;
 
         let data;
         try {
