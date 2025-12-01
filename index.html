@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Free Wala Search Notice — Contact Junaid</title>
+  <style>
+    :root{
+      --bg1:#0f172a; /* dark navy */
+      --bg2:#071033; /* deeper */
+      --accent:#ff4d6d; /* pinkish */
+      --accent2:#5eead4; /* mint */
+      --glass: rgba(255,255,255,0.06);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: radial-gradient(circle at 10% 20%, rgba(94,234,212,0.06), transparent 15%),
+                  radial-gradient(circle at 90% 80%, rgba(255,77,109,0.04), transparent 20%),
+                  linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:#e6eef8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+    }
+
+    .card{
+      width:min(980px,96%);
+      padding:36px;
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      backdrop-filter: blur(8px) saturate(120%);
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* animated floating shapes */
+    .orb{position:absolute;border-radius:50%;filter:blur(30px);opacity:0.6}
+    .orb.one{width:420px;height:420px;background:linear-gradient(135deg,var(--accent),transparent);top:-120px;left:-120px;animation:float1 12s ease-in-out infinite}
+    .orb.two{width:320px;height:320px;background:linear-gradient(135deg,var(--accent2),transparent);bottom:-100px;right:-160px;animation:float2 10s ease-in-out infinite}
+
+    @keyframes float1{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(18px) rotate(10deg)}100%{transform:translateY(0) rotate(0deg)}}
+    @keyframes float2{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-22px) rotate(-8deg)}100%{transform:translateY(0) rotate(0deg)}}
+
+    /* headline */
+    .headline{
+      font-size:clamp(28px,6.5vw,64px);
+      line-height:1.02;
+      font-weight:800;
+      letter-spacing: -0.02em;
+      margin:8px 0 14px 0;
+      text-transform: none;
+      color: white;
+      text-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 20px rgba(255,77,109,0.12);
+      display:inline-block;
+      padding:8px 18px;
+      border-radius:10px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      transform-origin:center;
+      animation:pop 1.4s ease-out both;
+    }
+
+    @keyframes pop{0%{transform:scale(.82);opacity:0}60%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
+
+    .headline .bold-part{font-weight:900; color:var(--accent); padding-right:6px}
+
+    /* subline */
+    .sub{
+      font-size:clamp(14px,2.4vw,18px);
+      opacity:0.95;
+      margin:6px 0 22px 0;
+    }
+
+    /* contact area */
+    .contact{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+    .btn{
+      padding:10px 18px;
+      border-radius:12px;
+      font-weight:700;
+      border:0;
+      cursor:pointer;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 6px 20px rgba(9,12,28,0.5);
+    }
+    .btn.message{background:linear-gradient(90deg,var(--accent2),#b6fff0); color:#022026}
+
+    /* typing cursor for the trailing text */
+    .typing{
+      display:inline-block;
+      overflow:hidden;
+      white-space:nowrap;
+      border-right:3px solid rgba(255,255,255,0.12);
+      animation:typing 3.6s steps(30,end) infinite;
+      max-width:100%;
+    }
+    @keyframes typing{0%{width:0}50%{width:100%}75%{width:100%}100%{width:0}}
+
+    /* responsive small adjustments */
+    @media (max-width:520px){
+      .card{padding:20px}
+      .contact{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="main-heading">
+    <div class="orb one" aria-hidden="true"></div>
+    <div class="orb two" aria-hidden="true"></div>
+
+    <h1 id="main-heading" class="headline">
+      <span class="bold-part">Free Wala Search</span>
+      <span>Band Hogaya hai</span>
+    </h1>
+
+    <p class="sub">Contach Junaid aur iss</p>
+
+    <div class="contact">
+      <button class="btn message" id="tgBtn" title="Open Telegram">Open Telegram</button>
+    </div>
+
+  </div>
+
+  <script>
+    // contact text (kept intentionally exactly as user provided)
+    const contactText = `Free Wala Search Band Hogaya hai Contach Junaid aur iss`;
+
+    // Remove any references to non-existent elements (fixes TypeError caused by missing copyBtn)
+    // Only add listener for the existing WhatsApp button.
+    const tgBtn = document.getElementById('tgBtn');
+    if (tgBtn) {
+      tgBtn.addEventListener('click', ()=>{
+        const url = `https://t.me/TOXIC_FR`;
+        window.open(url, '_blank');
+      });
+    }
+
+    // temporary toast utility (kept in case you want to show messages later)
+    function showToast(msg){
+      const t = document.createElement('div');
+      t.textContent = msg;
+      Object.assign(t.style,{
+        position:'fixed',left:'50%',bottom:'36px',transform:'translateX(-50%)',
+        background:'rgba(0,0,0,0.7)',color:'#fff',padding:'10px 16px',borderRadius:'10px',zIndex:9999,
+        transition:'opacity .3s ease'
+      });
+      document.body.appendChild(t);
+      setTimeout(()=>{t.style.opacity='0';t.addEventListener('transitionend',()=>t.remove())},1600);
+    }
+  </script>
+</body>
+</html>
